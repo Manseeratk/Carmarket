@@ -1,0 +1,36 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Car Categories</h5>
+          <ul class="list-unstyled">
+            <% CarCategory.all.each do |category| %>
+              <li><%= link_to category.name, cars_by_category_path(category), class: "text-dark" %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <h1>Cars in <%= @car_category.name %> Category</h1>
+      <ul class="list-unstyled">
+        <% @cars.each do |car| %>
+          <li class="media mb-4">
+            <% if car.image.attached? %>
+              <%= image_tag car.image, size: '100x100', class: "mr-3", alt: "#{car.name} image" %>
+            <% end %>
+            <div class="media-body">
+              <h5 class="mt-0"><%= link_to car.name, car_path(car), class: "text-dark" %></h5>
+              <!-- Display any other relevant car details as needed -->
+              <p><strong>Make:</strong> <%= car.make %></p>
+              <p><strong>Model:</strong> <%= car.model %></p>
+              <p><strong>Price:</strong> <%= car.price %></p>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+      <%= paginate @cars, class: "pagination justify-content-center" %>
+    </div>
+  </div>
+</div>

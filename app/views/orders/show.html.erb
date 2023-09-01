@@ -1,0 +1,139 @@
+<div style="margin:10%;">
+  <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+              <th scope="col" class="px-6 py-3">
+                  Data
+              </th>
+              <th scope="col" class="px-6 py-3">
+                  Details
+              </th>
+              <th>
+              </th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                Customer name:
+            </th>
+            <td class="px-6 py-4">
+                <%= @order.customer_name %>
+            </td>
+        </tr>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                Shipping address:
+            </th>
+            <td class="px-6 py-4">
+                <%= @order.shipping_address %>
+            </td>
+        </tr>
+
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                Phone no:
+            </th>
+            <td class="px-6 py-4">
+              <%= @order.phone_no %>
+            </td>
+        </tr>
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Product
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Quantity
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Total
+                </th>
+            </tr>
+        </thead>
+        <% @order.line_items.each do|line_item| %>
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <%= line_item[:car].name %>
+                </th>
+                <td class="px-6 py-4">
+                    <%= line_item[:quantity] %>
+                </td>
+                <td class="px-6 py-4">
+                        <%= order_item_total(line_item) %>
+                </td>
+            </tr>
+        <% end %>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                Province:
+            </th>
+            <td class="px-6 py-4">
+                <%= @order.province %>
+            </td>
+        </tr>
+
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                Pst Rate:
+            </th>
+            <td class="px-6 py-4">
+                <%= @order.pst_rate %>
+            </td>
+        </tr>
+
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                Gst Rate:
+            </th>
+            <td class="px-6 py-4">
+                <%= @order.gst_rate %>
+            </td>
+        </tr>
+        
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                Hst Rate:
+            </th>
+            <td class="px-6 py-4">
+                <%= @order.hst_rate %>
+            </td>
+        </tr>
+
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                Grand Total:
+            </th>
+            <td class="px-6 py-4">
+                <%= @order.total.to_i %>
+            </td>
+        </tr>
+
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                Status:
+            </th>
+            <td class="px-6 py-4">
+                <%= @order.status %>
+            </td>
+        </tr>
+        <tr>
+        </tr>
+      </tbody>
+  </table>
+    <% if @order.status == "unpaid" %>
+        <%= form_tag(order_payment_path(@order), method: :post) do %>
+            <label class="amount">
+                <span>Amount: <%= @order.total.to_i %></span>
+            </label>
+
+            <script
+                src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key="<%= Rails.configuration.stripe[:publishable_key] %>"
+                data-description="A month's subscription"
+                data-amount="<%= @order.total.to_i * 100%>"
+                data-locale="auto">
+            </script>
+        <% end %>
+    <% end %>
+</div>

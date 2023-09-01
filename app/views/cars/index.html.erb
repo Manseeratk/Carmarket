@@ -1,0 +1,40 @@
+<h1>Welcome to our Car Store!</h1>
+<p>Here you can find all the cars we have in stock.</p>
+<%= link_to "Search By Category", cars_by_category_path(CarCategory.first) %>
+<%= form_tag(cars_path, method: :get) do %>
+  <%= text_field_tag :keyword, @keyword, placeholder: 'Search by keyword' %>
+  <%= select_tag :category_id, options_for_select(@car_categories.pluck(:name, :id), @selected_category), prompt: 'All Categories' %>
+  <%= check_box_tag :on_sale, '1', @on_sale.present? %>
+  <%= label_tag :on_sale, 'On Sale' %>
+  <%= check_box_tag :new, '1', @new.present? %>
+  <%= label_tag :new, 'New' %>
+  <%= check_box_tag :recently_updated, '1', @recently_updated.present? %>
+  <%= label_tag :recently_updated, 'Recently Updated' %>
+  <%= submit_tag 'Search' %>
+<% end %>
+<div class="container mt-4">
+  <div class="row">
+    <% @cars.each do |car| %>
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <% if car.image.attached? %>
+            <%= image_tag car.image, class: "card-img-top", style: "height: 500px;",alt: "#{car.name} image" %>
+          <% end %>
+          <div class="card-body">
+            <h5 class="card-title">
+              <%= link_to car.name, car_path(car), class: "text-dark font-weight-bold" %>
+            </h5>
+            <p class="card-text mb-2"><strong>Description:</strong> <%= car.description %></p>
+            <p class="card-text"><strong>Make:</strong> <%= car.make %></p>
+            <p class="card-text"><strong>Model:</strong> <%= car.model %></p>
+            <p class="card-text"><strong>Variant:</strong> <%= car.variant %></p>
+            <p class="card-text"><strong>Price:</strong> <%= car.price %></p>
+            <p class="card-text"><strong>Category:</strong> <%= car.car_category.name %></p>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <%= paginate @cars, class: "pagination justify-content-center" %>
+</div>
+

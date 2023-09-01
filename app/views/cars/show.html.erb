@@ -1,0 +1,16 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-body">
+      <h1 class="card-title"><%= @car.name %></h1>
+      <% if @car.image.attached? %>
+<%= image_tag @car.image, class: "card-img-top", style: "height: 500px; width:500px" %>
+<% end %>
+      <p class="card-text mb-2"><strong>Description:</strong> <%= @car.description %></p>
+      <p class="card-text"><strong>Make:</strong> <%= @car.make %></p>
+      <p class="card-text"><strong>Model:</strong> <%= @car.model %></p>
+      <p class="card-text"><strong>Variant:</strong> <%= @car.variant %></p>
+      <p class="card-text"><strong>Category:</strong> <%= @car.car_category.name %></p>
+      <%= link_to "Add to Cart", add_item_path(@car), class: "btn btn-success mt-3 text-white" %>
+    </div>
+  </div>
+</div>
